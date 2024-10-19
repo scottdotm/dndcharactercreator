@@ -2,7 +2,8 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+
+import { CharacterSheet } from "./character-sheet;
 
 export default function Header() {
   return (
@@ -25,13 +26,8 @@ export default function Header() {
         <Input></Input>
         {/* Notice we have to import our components from ./ui/FILENAME  */}
       </div>
-      <div className="flex gap-8 justify-center items-center">
-        <h1>DnD Character Sheet</h1>
-      </div>
-      <div className="flex gap-8 justify-center items-center">
-        <Label>Input Some Text About Character. (change this)</Label>
-        <textarea>Box</textarea>
-      </div>
+
+      <CharacterSheet></CharacterSheet>
       <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
     </div>
   );

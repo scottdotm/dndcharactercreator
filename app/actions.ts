@@ -128,3 +128,13 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
+export const submitCharacterSheet = async (formData: FormData) => {
+  /* These are the 3 variables are needed to inform the next series of variables. */
+  const race = formData.get("race") as string;
+  const charClass = formData.get("charClass") as string;
+  const background = formData.get("background") as string;
+
+  const abilityScore = formData.get("abilityScore") as string;
+  const abilityModifier = formData.get("abilityModifier") as string;
+
+}
