@@ -1,9 +1,9 @@
 import { Label } from "./ui/label";
 import { SubmitButton } from "@/components/submit-button";
 import { FormMessage, Message } from "@/components/form-message";
-import { signInAction } from "@/app/actions";
+import { submitCharacterSheet } from "@/app/actions";
 
-export default function Header() {
+export default function CharacterSheet() {
   return (
     <>
     <div className="flex gap-8 justify-center items-center">
@@ -19,3 +19,4 @@ export default function Header() {
     </>
   )
 }
+export { CharacterSheet };

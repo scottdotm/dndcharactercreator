@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { Input } from "./ui/input";
 
-import { CharacterSheet } from "./character-sheet;
+import { CharacterSheet } from "./character-sheet";
 
 export default function Header() {
   return (
