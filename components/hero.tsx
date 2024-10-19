@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { Input } from "./ui/input";
 
-import { CharacterSheet } from "./character-sheet";
+import CharacterSheet from "./character-sheet";
 
 export default function Header() {
   return (
@@ -11,15 +11,20 @@ export default function Header() {
       <div className="flex gap-8 justify-center items-center">
         {/* Badge Example */}
         <Badge variant={"default"} className="font-normal pointer-events-none">
-        Badge Example
+          Badge Example
         </Badge>
         {/* Button Example */}
-        <Button asChild size="sm" variant={"outline"} >
+        <Button asChild size="sm" variant={"outline"}>
           {/* Link Example */}
           <Link href="/sign-in">Sign in</Link>
         </Button>
         {/* Disabled Button Example */}
-        <Button asChild size="sm"  disabled className="opacity-75 cursor-none pointer-events-none" >
+        <Button
+          asChild
+          size="sm"
+          disabled
+          className="opacity-75 cursor-none pointer-events-none"
+        >
           <Link href="/sign-up">Sign up</Link>
         </Button>
         {/* Input */}
