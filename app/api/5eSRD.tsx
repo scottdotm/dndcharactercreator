@@ -6,10 +6,11 @@
   /* Get alignments */
 }
 import axios from "axios";
+import { ApiOutput } from "./interface/api";
 
 const baseURL = "https://www.dnd5eapi.co/api";
 
-export async function getAlignments() {
+export async function getAlignments(): Promise<ApiOutput[]> {
   try {
     const response = await axios.get(`${baseURL}/alignments`);
     console.log("API Response:", response.data); // Log the entire response
@@ -21,14 +22,12 @@ export async function getAlignments() {
       // Extract alignments from the response object
       const alignments = response.data.results;
 
-      // Map the data to the desired format
-      const mappedAlignments = alignments.map(
-        (alignment: { index: string; name: string; url: string }) => ({
-          index: alignment.index,
-          name: alignment.name,
-          url: alignment.url,
-        })
-      );
+      // Map the data to the desired format using the ApiOutput interface
+      const mappedAlignments = alignments.map((alignment: ApiOutput) => ({
+        index: alignment.index,
+        name: alignment.name,
+        url: alignment.url,
+      }));
 
       console.log("Mapped Alignments:", mappedAlignments); // Log the mapped alignments
       return mappedAlignments;

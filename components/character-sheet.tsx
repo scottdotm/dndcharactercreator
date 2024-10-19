@@ -4,12 +4,11 @@ import { SubmitButton } from "@/components/submit-button";
 import { FormMessage, Message } from "@/components/form-message";
 import { submitCharacterSheet } from "@/app/actions";
 import React, { useState, useEffect } from "react";
+import { ApiOutput } from "@/app/api/interface/api";
 import { getAlignments } from "../app/api/5eSRD"; // Import the getAlignments function
 
 export default function CharacterSheet() {
-  const [alignments, setAlignments] = useState<
-    { index: string; name: string; url: string }[]
-  >([]);
+  const [alignments, setAlignments] = useState<ApiOutput[]>([]);
   const [isLoadingAlignments, setIsLoadingAlignments] = useState(true);
   const [selectedAlignment, setSelectedAlignment] = useState("");
   const [characterName, setCharacterName] = useState("");
@@ -55,35 +54,39 @@ export default function CharacterSheet() {
       </div>
       <div className="flex gap-8 justify-center items-center">
         <div className="flex gap-8 justify-center items-center">
-          <Label>Please select character alignment:</Label>
-          <>
-            {isLoadingAlignments ? (
-              <p>Loading alignments...</p>
-            ) : alignments.length > 0 ? (
-              <select
-                value={selectedAlignment}
-                onChange={(e) => setSelectedAlignment(e.target.value)}
-              >
-                <option value="">Select an alignment</option>
-                {alignments.map((alignment) => (
-                  <option key={alignment.index} value={alignment.index}>
-                    {alignment.name}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <p>No alignments found.</p>
-            )}
-          </>
+          <Label>
+            Please select character alignment:
+            <>
+              {isLoadingAlignments ? (
+                <p>Loading alignments...</p>
+              ) : alignments.length > 0 ? (
+                <select
+                  value={selectedAlignment}
+                  onChange={(e) => setSelectedAlignment(e.target.value)}
+                >
+                  <option value="">Select an alignment</option>
+                  {alignments.map((alignment) => (
+                    <option key={alignment.index} value={alignment.index}>
+                      {alignment.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p>No alignments found.</p>
+              )}
+            </>
+          </Label>
         </div>
         <div>
-          <Label>Character Name:</Label>
-          <input
-            type="text"
-            value={characterName}
-            onChange={(e) => setCharacterName(e.target.value)}
-            placeholder="Enter character name"
-          />
+          <Label>
+            Character Name:
+            <input
+              type="text"
+              value={characterName}
+              onChange={(e) => setCharacterName(e.target.value)}
+              placeholder="Enter character name"
+            />
+          </Label>
         </div>
         <textarea placeholder="Enter character description"></textarea>
         <SubmitButton
