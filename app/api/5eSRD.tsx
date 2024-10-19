@@ -6,36 +6,34 @@
   /* Get alignments */
 }
 import axios from "axios";
-import { ApiOutput } from "./interface/api";
+import { ApiOutput } from "../interface/api";
 
 const baseURL = "https://www.dnd5eapi.co/api";
 
-export async function getAlignments(): Promise<ApiOutput[]> {
+const fetchResource = async (endpoint: string) => {
   try {
-    const response = await axios.get(`${baseURL}/alignments`);
-    console.log("API Response:", response.data); // Log the entire response
+    const response = await axios.get(`${baseURL}/${endpoint}`);
 
-    // Check if response.data has a "count" property (indicating object format)
-    if (typeof response.data === "object" && "count" in response.data) {
-      console.log("Data is an object:", response.data); // Log the data object
-
-      // Extract alignments from the response object
-      const alignments = response.data.results;
-
-      // Map the data to the desired format using the ApiOutput interface
-      const mappedAlignments = alignments.map((alignment: ApiOutput) => ({
-        index: alignment.index,
-        name: alignment.name,
-        url: alignment.url,
-      }));
-
-      console.log("Mapped Alignments:", mappedAlignments); // Log the mapped alignments
-      return mappedAlignments;
-    } else {
-      throw new Error("Unexpected API response format for alignments");
+    if (!response.data.count) {
+      throw new Error("Unexpected API response format");
     }
+
+    const results = response.data.results;
+    return results.map((item: ApiOutput) => ({
+      index: item.index,
+      name: item.name,
+      url: item.url,
+    }));
   } catch (error) {
-    console.error("Error fetching alignments:", error);
+    console.error(`Error fetching ${endpoint}:`, error);
     return [];
   }
+};
+
+export async function getAlignments(): Promise<ApiOutput[]> {
+  return fetchResource("alignments");
+}
+
+export async function getRaces(): Promise<ApiOutput[]> {
+  return fetchResource("races");
 }

@@ -1,22 +1,29 @@
 "use client";
+import { useLoadingState } from "./ui/use-loading-state";
+import React, { useState, useEffect } from "react";
+import { submitCharacterSheet } from "@/app/actions";
+import { ApiOutput } from "@/app/interface/api"; // Import the ApiOutput interface
+import { getAlignments, getRaces } from "@/app/api/5eSRD"; // Import the API getter functions
 import { Label } from "./ui/label";
 import { SubmitButton } from "@/components/submit-button";
-import { FormMessage, Message } from "@/components/form-message";
-import { submitCharacterSheet } from "@/app/actions";
-import React, { useState, useEffect } from "react";
-import { ApiOutput } from "@/app/api/interface/api";
-import { getAlignments } from "../app/api/5eSRD"; // Import the getAlignments function
+import { Dropdown } from "@/components/alignment-selector";
 
 export default function CharacterSheet() {
-  const [alignments, setAlignments] = useState<ApiOutput[]>([]);
-  const [isLoadingAlignments, setIsLoadingAlignments] = useState(true);
-  const [selectedAlignment, setSelectedAlignment] = useState("");
-  const [characterName, setCharacterName] = useState("");
+  const { isLoading, startLoading, stopLoading } = useLoadingState();
   const [errorMessage, setErrorMessage] = useState("");
+  const [alignments, setAlignments] = useState<ApiOutput[]>([]);
+  const [races, setRaces] = useState<ApiOutput[]>([]);
+  const [selectedAlignment, setSelectedAlignment] = useState("");
+  const [selectedRace, setSelectedRace] = useState("");
+  const [characterName, setCharacterName] = useState("");
 
   useEffect(() => {
     const fetchAlignments = async () => {
+      startLoading();
       try {
+        {
+          /* Try and grab alignments from the API */
+        }
         const alignments = await getAlignments();
         setAlignments(alignments);
         console.log("Alignments set in state:", alignments);
@@ -24,11 +31,24 @@ export default function CharacterSheet() {
         console.error("Error fetching alignments:", error);
         setErrorMessage("Failed to load alignments. Please try again later.");
       } finally {
-        setIsLoadingAlignments(false);
+        stopLoading();
+      }
+    };
+    const fetchRaces = async () => {
+      try {
+        const races = await getRaces();
+        setRaces(races);
+        console.log("Races set in state:", races);
+      } catch (error) {
+        console.error("Error fetching alignments:", error);
+        setErrorMessage("Failed to load alignments. Please try again later.");
+      } finally {
+        stopLoading();
       }
     };
 
     fetchAlignments();
+    fetchRaces();
   }, []);
 
   const handleSubmit = () => {
@@ -48,36 +68,34 @@ export default function CharacterSheet() {
   };
 
   return (
-    <>
+    <div>
       <div className="flex gap-8 justify-center items-center">
         <h1>DnD Character Sheet</h1>
       </div>
-      <div className="flex gap-8 justify-center items-center">
-        <div className="flex gap-8 justify-center items-center">
+      <div className="flex-row gap-8 justify-center items-center">
+        <div className="flex-auto gap-8 justify-center items-center">
           <Label>
             Please select character alignment:
-            <>
-              {isLoadingAlignments ? (
-                <p>Loading alignments...</p>
-              ) : alignments.length > 0 ? (
-                <select
-                  value={selectedAlignment}
-                  onChange={(e) => setSelectedAlignment(e.target.value)}
-                >
-                  <option value="">Select an alignment</option>
-                  {alignments.map((alignment) => (
-                    <option key={alignment.index} value={alignment.index}>
-                      {alignment.name}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <p>No alignments found.</p>
-              )}
-            </>
+            <Dropdown
+              data={alignments}
+              selectedData={selectedAlignment}
+              setSelectedData={setSelectedAlignment}
+              isLoading={isLoading}
+            />
           </Label>
         </div>
-        <div>
+        <div className="flex-auto gap-8 justify-center items-center">
+          <Label>
+            Please select character race:
+            <Dropdown
+              data={races}
+              selectedData={selectedRace}
+              setSelectedData={setSelectedRace}
+              isLoading={isLoading}
+            />
+          </Label>
+        </div>
+        <div className="flex-auto gap-8 justify-center items-center">
           <Label>
             Character Name:
             <input
@@ -88,15 +106,22 @@ export default function CharacterSheet() {
             />
           </Label>
         </div>
-        <textarea placeholder="Enter character description"></textarea>
+        <div className="flex gap-8 justify-center items-center">
+          <Label>
+            Character Description:
+            <textarea placeholder="Enter character description"></textarea>
+          </Label>
+        </div>
+      </div>
+      <div className="flex gap-8 justify-center items-center">
         <SubmitButton
           pendingText="Saving Character Data..."
           onClick={handleSubmit}
         >
           Save Character Data
         </SubmitButton>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
-    </>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+    </div>
   );
 }
