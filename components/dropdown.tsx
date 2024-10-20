@@ -10,7 +10,7 @@ export function Dropdown({
   return (
     <div>
       {isLoading ? (
-        <p>Loading alignments...</p>
+        <p>Loading from API..</p>
       ) : (
         <select
           value={selectedData}
@@ -26,7 +26,7 @@ export function Dropdown({
           {/* Display a loading option if alignments are empty and not loading */}
           {!isLoading && data.length === 0 && (
             <option value="" disabled>
-              Loading alignments...
+              Loading from API...
             </option>
           )}
         </select>

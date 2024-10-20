@@ -37,3 +37,6 @@ export async function getAlignments(): Promise<ApiOutput[]> {
 export async function getRaces(): Promise<ApiOutput[]> {
   return fetchResource("races");
 }
+export async function getClasses(): Promise<ApiOutput[]> {
+  return fetchResource("classes");
+}
